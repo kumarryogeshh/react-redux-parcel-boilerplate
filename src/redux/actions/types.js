@@ -1,0 +1,3 @@
+export const USER_REGISTERED = `USER_REGISTERED`;
+export const USER_LOGGEDIN = `USER_LOGGEDIN`;
+export const GET_ERRORS = `GET_ERRORS`;
