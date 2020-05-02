@@ -4,30 +4,30 @@ import { USER_REGISTERED, USER_LOGGEDIN, GET_ERRORS } from "./types";
 import { register, login } from "../../utils/api";
 import setAuthToken from "../../utils/setAuthToken";
 
-export const userRegistered = user => ({
+export const userRegistered = (user) => ({
   type: USER_REGISTERED,
-  payload: user
+  payload: user,
 });
 
-export const userLoggedIn = user => ({
+export const userLoggedIn = (user) => ({
   type: USER_LOGGEDIN,
-  payload: user
+  payload: user.user,
 });
 
-export const authError = data => ({
+export const authError = (data) => ({
   type: GET_ERRORS,
-  payload: data
+  payload: data,
 });
 
-export const logoutUser = () => dispatch => {
+export const logoutUser = () => (dispatch) => {
   localStorage.removeItem("jwtToken");
   setAuthToken(false);
   dispatch(userLoggedIn({}));
 };
 
-export const registerUser = (userData, history) => dispatch =>
+export const registerUser = (userData, history) => (dispatch) =>
   register(userData)
-    .then(user => {
+    .then((user) => {
       if (user.success) {
         history.push("/dashboard");
       } else {
@@ -38,34 +38,35 @@ export const registerUser = (userData, history) => dispatch =>
         }
       }
     })
-    .catch(error => {
+    .catch((error) => {
       dispatch(authError(error.response.data));
     });
 
-export const loginUser = userData => dispatch =>
+export const loginUser = (userData) => (dispatch) =>
   login(userData)
-    .then(user => {
-      if (user !== undefined && user.success) {
+    .then((user) => {
+      if (user !== undefined && user.jwt) {
         // Get token
-        const { token } = user;
+        const { jwt } = user;
         // Save token to ls
-        localStorage.setItem("jwtToken", token);
+        localStorage.setItem("jwtToken", jwt);
         // Set token to Auth header
-        setAuthToken(token);
-        // Decode token get user
-        const decoded = jwt_decode(token);
-        dispatch(userLoggedIn(decoded));
+        setAuthToken(jwt);
+        // // Decode token get user
+        // const decoded = jwt_decode(jwt);
+
+        dispatch(userLoggedIn(user));
       } else {
-        if (user !== undefined && !user.success) {
+        if (user !== undefined && !user.jwt) {
           dispatch(authError(user));
         } else {
           dispatch(authError({ success: false, msg: "Authentication error!" }));
         }
       }
     })
-    .catch(error => {
+    .catch((error) => {
       if (error) {
-        console.log(error);
+        console.error(error);
 
         dispatch(authError(error.response));
       }

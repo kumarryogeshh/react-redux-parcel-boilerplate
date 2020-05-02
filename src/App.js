@@ -2,11 +2,10 @@ import React, { Component } from "react";
 
 import { Route, Switch } from "react-router-dom";
 import { Provider } from "react-redux";
-import jwt_decode from "jwt-decode";
 
+import throttle from "lodash/throttle";
 import store from "./redux/store";
-import { userLoggedIn, logoutUser } from "./redux/actions/authActions";
-import setAuthToken from "./utils/setAuthToken";
+
 import About from "./components/about";
 import Locations from "./components/locations";
 import Products from "./components/products";
@@ -15,10 +14,25 @@ import Home from "./components/Home";
 import Signup from "./components/auth/Signup";
 import Login from "./components/auth/Login";
 import Navbar from "./components/Navbar";
-
+import { userLoggedIn } from "./redux/actions/authActions";
+import { saveState, loadState, getToken } from "./utils/localStorage";
 import "./custom.css";
 
+store.subscribe(
+  throttle(() => {
+    saveState({ auth: store.getState().auth });
+  }, 1000)
+);
+
 class App extends Component {
+  componentDidMount() {
+    if (getToken()) {
+      const persistedState = loadState();
+      if (persistedState && persistedState.auth.isAuthenticated) {
+        store.dispatch(userLoggedIn(persistedState.auth));
+      }
+    }
+  }
   render() {
     return (
       <Provider store={store}>

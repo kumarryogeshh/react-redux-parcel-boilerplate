@@ -2,21 +2,21 @@ import { USER_REGISTERED, USER_LOGGEDIN } from "../actions/types";
 import isEmpty from "../../utils/isEmpty";
 const initialState = {
   isAuthenticated: false,
-  user: {}
+  user: {},
 };
 
-export default function(state = initialState, action) {
+export default function (state = initialState, action) {
   switch (action.type) {
     case USER_REGISTERED:
       return {
         ...state,
-        user: action.payload
+        user: action.payload,
       };
     case USER_LOGGEDIN:
       return {
         ...state,
         isAuthenticated: !isEmpty(action.payload),
-        user: action.payload
+        user: action.payload,
       };
     default:
       return state;

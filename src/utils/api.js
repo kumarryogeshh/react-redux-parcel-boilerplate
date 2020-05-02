@@ -7,9 +7,9 @@ import { host } from "./constants";
 
 export const login = async ({ username, password }) => {
   try {
-    const res = await axios.post(`${host}/users/authenticate`, {
-      username,
-      password
+    const res = await axios.post(`${host}/auth/local`, {
+      identifier: username,
+      password,
     });
     return res.data;
   } catch (err) {
@@ -22,7 +22,7 @@ export const register = async ({
   email,
   company,
   username,
-  password
+  password,
 }) => {
   try {
     const res = await axios.post(`${host}/users/register`, {
@@ -30,7 +30,7 @@ export const register = async ({
       email,
       company,
       username,
-      password
+      password,
     });
     return res.data;
   } catch (err) {

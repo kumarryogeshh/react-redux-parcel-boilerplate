@@ -23,6 +23,7 @@
     "axios": "latest",
     "jsonwebtoken": "latest",
     "jwt-decode": "latest",
+    "lodash": "^4.17.15",
     "prop-types": "latest",
     "react": "latest",
     "react-dom": "latest",

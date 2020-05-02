@@ -6,7 +6,7 @@ import {
   Header,
   Input,
   Button,
-  Message
+  Message,
 } from "semantic-ui-react";
 import { withRouter, Link } from "react-router-dom";
 import { connect } from "react-redux";
@@ -14,21 +14,19 @@ import { loginUser } from "../../redux/actions/authActions";
 
 class Login extends Component {
   state = {
-    username: "dev-user",
+    username: "lms-admin",
     password: "123456",
     errors: {},
-    showError: false
+    showError: false,
   };
 
   componentDidMount() {
-    console.log(this.props);
     if (this.props.auth.isAuthenticated) {
       this.props.history.push("/dashboard");
     }
   }
-  componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
 
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.auth.isAuthenticated) {
       this.props.history.push("/dashboard");
     }
@@ -37,19 +35,19 @@ class Login extends Component {
     }
   }
 
-  onChange = e => {
+  onChange = (e) => {
     const { name, value } = e.target;
     this.setState({ [name]: value, showError: false, errors: {} });
   };
 
-  onSubmit = e => {
+  onSubmit = (e) => {
     e.preventDefault();
     const { username, password } = this.state;
 
     if (username === "" || password === "") {
       this.setState({
         errors: { msg: "All fields are mandatory" },
-        showError: true
+        showError: true,
       });
     } else {
       this.props.loginUser({ username, password });
@@ -66,7 +64,7 @@ class Login extends Component {
               marginLeft: 300,
               marginTop: 100,
               marginRight: 300,
-              marginBottom: 100
+              marginBottom: 100,
             }}
           >
             <Grid.Row>
@@ -97,7 +95,7 @@ class Login extends Component {
                 style={{
                   marginTop: 20,
                   marginBottom: 20,
-                  backgroundColor: "#f05f40"
+                  backgroundColor: "#f05f40",
                 }}
                 onClick={this.onSubmit}
                 positive
@@ -125,15 +123,12 @@ class Login extends Component {
 Login.propTypes = {
   loginUser: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired
+  errors: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   auth: state.auth,
-  errors: state.errors
+  errors: state.errors,
 });
 
-export default connect(
-  mapStateToProps,
-  { loginUser }
-)(withRouter(Login));
+export default connect(mapStateToProps, { loginUser })(withRouter(Login));

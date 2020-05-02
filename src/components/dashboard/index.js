@@ -9,9 +9,7 @@ class Dashboard extends Component {
       this.props.history.push("/");
     }
   }
-  componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
-
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (!nextProps.auth.isAuthenticated) {
       this.props.history.push("/");
     }
@@ -20,17 +18,11 @@ class Dashboard extends Component {
     }
   }
   render() {
-    console.log(this.props);
-
     return <div className="ui container">Dashboard</div>;
   }
 }
-const mapStateToProps = state => ({
-  auth: state.auth,
-  errors: state.errors
-});
+const mapStateToProps = (state) => {
+  return { auth: state.auth, errors: state.errors, user: state.auth.user };
+};
 
-export default connect(
-  mapStateToProps,
-  { loginUser }
-)(withRouter(Dashboard));
+export default connect(mapStateToProps, { loginUser })(withRouter(Dashboard));
